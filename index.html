@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<style>
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			p{
+				font-size: 12px;
+				line-height: 12px;
+				text-align: center;
+				
+			}
+			span{
+				width: 6px;
+				text-align: center;
+				display: inline-block;
+				line-height: 12px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="content"></div>
+	</body>
+</html>
+<script>
+	var content =document.getElementById('content')
+	var images = new Image();
+	images.src = 'img/1.png';
+//	getImg(images)
+	images.onload = function(){
+		getImg(this)
+	}
+	 // 根据rgb值计算灰度
+    function getGray(r, g, b) {
+        return 0.299 * r + 0.578 * g + 0.114 * b;
+    }
+    // 根据灰度生成相应字符
+    function toText(g) {
+        if (g <= 30) {
+            return '<span>#</span>';
+        } else if (g > 30 && g <= 60) {
+            return '<span>&</span>';
+        } else if (g > 60 && g <= 120) {
+            return '<span>$</span>';
+        }  else if (g > 120 && g <= 150) {
+            return '<span>*</span>';
+        } else if (g > 150 && g <= 180) {
+            return '<span>o</span>';
+        } else if (g > 180 && g <= 210) {
+            return '<span>!</span>';
+        } else if (g > 210 && g <= 240) {
+            return '<span>;</span>';
+        }  else {
+            return '<span>.</span>';//原作者坑爹呢，HTML中空格只能解释一个，用点代替好了
+        }
+    }
+//获取图片base64
+function getImg(img){
+	var can = document.createElement('canvas');
+	var imgwidthfirst = img.width;
+		img.width = 500;
+		img.height = img.height*500/imgwidthfirst
+		console.log(img.height)
+//		document.body.appendChild(img)
+		can.width = img.width;
+		can.height = img.height;
+		var ctx = can.getContext('2d');
+		ctx.drawImage(img,0,0,img.width,img.height)
+		var data = can.toDataURL("image/jpeg");
+		var imgdata = ctx.getImageData(0,0,can.width,can.height);
+		var imgdataarr = imgdata.data;
+		var imgdatawidth = imgdata.width;
+		var imgdataheight = imgdata.height;
+		console.log(imgdata)
+		var html = '';
+		for (h = 0; h < imgdataheight; h += 12) {
+            var p = '<p>';
+            for (w = 0; w < imgdatawidth; w += 6) {
+                var index = (w + imgdatawidth * h) * 4;
+                var r = imgdataarr[index + 0];
+                var g = imgdataarr[index + 1];
+                var b = imgdataarr[index + 2];
+                var gray = getGray(r, g, b);
+                p += toText(gray);
+            }
+            p += '</p>';
+            html += p;
+        }
+        content.innerHTML = html;
+}
+//init()
+//初始化获取图片创建字符画
+/*function init(img){
+	var can = document.createElement('canvas');
+	can.width = img.width;
+	can.height = img.height;
+	var ctx = can.getContext('2d');
+	
+}*/
+function init(){
+	var vi = document.createElement('video');
+	document.body.appendChild(vi)
+	vi.src = 'img/1.mp4'
+	vi.autoplay = 'autoplay';
+	console.log(vi.files)
+	
+}
+</script>
