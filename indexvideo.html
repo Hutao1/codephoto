@@ -64,8 +64,8 @@ function getImg(img){
 //	console.log(img.width)
 //	console.log(img.height)
 	var imgwidthfirst = img.videoWidth;
-		img.width = 500;
-		img.height = img.videoHeight*500/imgwidthfirst
+		img.width = 400;
+		img.height = img.videoHeight*400/imgwidthfirst
 //		document.body.appendChild(img)
 		can.width = img.width;
 		can.height = img.height;
@@ -92,6 +92,7 @@ function getImg(img){
             html += p;
         }
         content.innerHTML = html;
+        can.remove()
 }
 init()
 //初始化获取图片创建字符画
@@ -107,15 +108,45 @@ function init(){
 //	document.body.appendChild(vi)
 	vi.src = './img/1.mp4'
 	vi.autoplay = 'autoplay';
-//	vi.muted ='muted'
+	vi.muted ='muted'
 	vi.play()
 //	console.log(vi.duration)
 	vi.oncanplay = function () {  
 		var max = vi.duration*1000
 		var nowtime = 0;
 		var timer = setInterval(()=>{
-			nowtime +=100;
-			if(max <= nowtime){
+			if(max <= vi.currentTime*1000){
+				init2()
+				clearInterval(timer)
+			}else{
+				getImg(vi)
+			}
+			
+		},100)
+    	
+	}
+	
+	
+	
+	/*setTimeout(()=>{
+		getImg(vi)
+	},2000)*/
+	
+//	console.log(11111)
+}
+function init2(){
+	var vi = document.createElement('video');
+//	document.body.appendChild(vi)
+	vi.src = './img/2.mp4'
+	vi.autoplay = 'autoplay';
+	vi.muted ='muted'
+	vi.play()
+//	console.log(vi.duration)
+	vi.oncanplay = function () {  
+		var max = vi.duration*1000
+		var nowtime = 0;
+		var timer = setInterval(()=>{
+			if(max <= vi.currentTime*1000){
 				clearInterval(timer)
 			}else{
 				getImg(vi)
